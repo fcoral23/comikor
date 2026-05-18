@@ -1,179 +1,40 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cómic Interactivo</title>
+    
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: #121212;
-            font-family: 'Courier New', Courier, monospace;
-            overflow-x: hidden;
-            color: #fff;
-        }
-
-        /* Contenedor principal del Visor */
-        #visor-container {
-            position: relative;
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Estilo de la imagen del cómic (width fit automático) */
-        .comic-img {
-            width: 100%;
-            max-width: 800px; /* Controla el ancho máximo en pantallas grandes */
-            height: auto;
-            display: block;
-        }
-
-        /* --- EFECTO DE ARRANQUE (CLIP-PATH) --- */
-        .pantalla-efecto {
-            position: fixed;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 800px;
-            height: 100vh;
-            background-size: cover;
-            background-position: top center;
-            z-index: 10;
-            pointer-events: none;
-            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
-        }
-
-        /* Silueta de zigzag emulando papel rasgado a la mitad */
-        .arranque-arriba {
-            clip-path: polygon(0% 0%, 100% 0%, 100% 48%, 85% 52%, 70% 47%, 55% 53%, 40% 48%, 25% 52%, 10% 46%, 0% 50%);
-        }
-
-        .arranque-abajo {
-            clip-path: polygon(0% 50%, 10% 46%, 25% 52%, 40% 48%, 55% 53%, 70% 47%, 85% 52%, 100% 48%, 100% 100%, 0% 100%);
-        }
-
-        /* Animación: Desplazar las partes rotas */
-        .animar-arriba {
-            transform: translate(-50%, -60vh) rotate(-2deg);
-            opacity: 0;
-        }
-
-        .animar-abajo {
-            transform: translate(-50%, 60vh) rotate(2deg);
-            opacity: 0;
-        }
-
-        /* --- POP-UP DE DECISIONES --- */
-        #popup-decisiones {
-            position: fixed;
-            bottom: -200px; /* Escondido por defecto */
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(20, 20, 20, 0.95);
-            border: 3px solid #fff;
-            padding: 20px;
-            width: 90%;
-            max-width: 600px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(255,255,255,0.2);
-            z-index: 5;
-            transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        #popup-decisiones.activo {
-            bottom: 40px; /* Sube cuando el usuario llega al final */
-        }
-
-        .titulo-popup {
-            text-align: center;
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #ccc;
-        }
-
-        /* Botones de Opción */
-        .opcion-btn {
-            background: #222;
-            color: #fff;
-            border: 2px solid #555;
-            padding: 12px 20px;
-            font-size: 1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-radius: 5px;
-            transition: all 0.2s ease;
-            width: 100%;
-            font-family: inherit;
-        }
-
-        .opcion-btn:hover {
-            background: #fff;
-            color: #000;
-            border-color: #fff;
-        }
-
-        /* Indicador de la tecla de flecha */
-        .tecla-indicador {
-            background: #444;
-            color: #fff;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            border-bottom: 3px solid #222;
-            text-transform: uppercase;
-        }
-
-        .opcion-btn:hover .tecla-indicador {
-            background: #000;
-            color: #fff;
-            border-bottom-color: #333;
-        }
-
-        /* Detector del final de la página */
-        #final-pagina {
-            width: 100%;
-            height: 50px;
-        }
+        /* [AQUÍ SE QUEDA TODO EL CSS QUE YA TENÍAS] */
+        /* Lo que controla el diseño negro, el tamaño de la imagen, */
+        /* los botones y el efecto clip-path de rasgado de papel */
     </style>
 </head>
 <body>
 
     <div id="visor-container">
-        <!-- Imagen principal -->
         <img id="comic-actual" class="comic-img" src="" alt="Cargando escena...">
-        
-        <!-- Elemento para detectar el final del scroll -->
         <div id="final-pagina"></div>
     </div>
 
-    <!-- Pop-up interactivo -->
     <div id="popup-decisiones">
         <div class="titulo-popup">¿Qué vas a hacer?</div>
         <div id="contenedor-botones"></div>
     </div>
 
-    <script>
-        // ========================================================
+    <!-- ======================================================== -->
+    <!-- AQUÍ EMPIEZA EL NUEVO SCRIPT (Borras el viejo y pegas este) -->
+    <!-- ======================================================== -->
+    // ========================================================
         // CONFIGURACIÓN DEL ÁRBOL DE DECISIONES
         // ========================================================
         // Mapea tus archivos de la carpeta 'assets' usando su nombre.
         // Ejemplo: "1" buscará el archivo "assets/1.jpg"
+    
         const historia = {
             "1": {
                 archivo: "1.jpg", 
@@ -214,7 +75,6 @@
             },
         };
 
-        // Reglas automáticas para las flechas del teclado
         const mapeoFlechas = {
             1: ["ArrowDown"],
             2: ["ArrowLeft", "ArrowRight"],
@@ -227,11 +87,9 @@
             "ArrowDown": "▼ Abajo"
         };
 
-        // ========================================================
-        // LÓGICA DE CONTROL DEL JUEGO
-        // ========================================================
-        let nodoActual = "1"; // El juego siempre iniciará buscando la clave "1"
+        let nodoActual = "1"; 
         let opcionesActivas = [];
+        let bloquearObserver = true; // El truco para que no se raye al inicio
 
         const imgElement = document.getElementById("comic-actual");
         const popup = document.getElementById("popup-decisiones");
@@ -242,27 +100,22 @@
             nodoActual = idNodo;
             const datosNodo = historia[idNodo];
 
-            // Forzar cierre de popup
             popup.classList.remove("activo");
+            bloquearObserver = true; 
 
-            // Construir la ruta dinámica apuntando a la carpeta assets
             imgElement.src = `assets/${datosNodo.archivo}`;
             window.scrollTo(0, 0);
 
-            // Mapear opciones y asignarles flechas de teclado automáticamente
             opcionesActivas = datosNodo.opciones.map((opc, index) => {
                 const totalOpciones = datosNodo.opciones.length;
                 const teclaAsignada = mapeoFlechas[totalOpciones] ? mapeoFlechas[totalOpciones][index] : null;
                 return { ...opc, tecla: teclaAsignada };
             });
 
-            // Limpiar y renderizar botones en el popup
             contenedorBotones.innerHTML = "";
             
             if (opcionesActivas.length === 0) {
                 contenedorBotones.innerHTML = "<p style='text-align:center; color:#ff4444; font-weight:bold;'>FIN DE LA AVENTURA</p>";
-                // Nota: Si quieres que aparezca el cartel de fin inmediatamente al scrollear,
-                // dejas que el observer lo active.
             } else {
                 opcionesActivas.forEach(opc => {
                     const btn = document.createElement("button");
@@ -280,11 +133,17 @@
             }
         }
 
+        // Se activa SOLO cuando la imagen ya se estiró por completo en pantalla
+        imgElement.onload = () => {
+            setTimeout(() => {
+                bloquearObserver = false;
+            }, 100);
+        };
+
         function procesarDecision(destino) {
             const datosNodoActual = historia[nodoActual];
             const rutaImagenActual = `assets/${datosNodoActual.archivo}`;
 
-            // 1. Crear capas para clonar el estado visual actual
             const capaArriba = document.createElement("div");
             const capaAbajo = document.createElement("div");
 
@@ -297,30 +156,23 @@
             document.body.appendChild(capaArriba);
             document.body.appendChild(capaAbajo);
 
-            // 2. Cargar el siguiente nodo en el fondo de forma silenciosa
             cargarNodo(destino);
 
-            // 3. Disparar el efecto visual de rasgado
             setTimeout(() => {
                 capaArriba.classList.add("animar-arriba");
                 capaAbajo.classList.add("animar-abajo");
             }, 50);
 
-            // 4. Limpiar el desorden del HTML al terminar la animación
             setTimeout(() => {
                 capaArriba.remove();
                 capaAbajo.remove();
             }, 650);
         }
 
-        // ========================================================
-        // DETECTORES (SCROLL E INTERRUPTORES)
-        // ========================================================
-
-        // Detectar si el usuario llegó al final absoluto de la imagen actual
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                // Muestra el popup al llegar abajo (tenga o no opciones finales)
+                if (bloquearObserver) return; // Si está cargando, ignora el scroll
+
                 if (entry.isIntersecting) {
                     popup.classList.add("activo");
                 }
@@ -329,19 +181,17 @@
 
         observer.observe(finalPagina);
 
-        // Capturar controles del teclado físico
         window.addEventListener("keydown", (e) => {
             if (!popup.classList.contains("activo")) return;
 
             const opcionSeleccionada = opcionesActivas.find(opc => opc.tecla === e.key);
             
             if (opcionSeleccionada) {
-                e.preventDefault(); // Evita saltos raros de pantalla con las flechas
+                e.preventDefault(); 
                 procesarDecision(opcionSeleccionada.destino);
             }
         });
 
-        // Arrancar la aplicación con el nodo inicial "1"
         window.onload = () => {
             cargarNodo("1");
         };
