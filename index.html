@@ -176,27 +176,27 @@
         // Ejemplo: "1" buscará el archivo "assets/1.jpg"
         const historia = {
             "1": {
-                archivo: "1.jpg", 
+                archivo: "1.pdf", 
                 opciones: [
                     { texto: "Ir por el camino 2.1", destino: "2.1" },
                     { texto: "Ir por el camino 2.2", destino: "2.2" }
                 ]
             },
             "2.1": {
-                archivo: "2.1.jpg",
+                archivo: "2.1.pdf",
                 opciones: [
                     { texto: "Tomar la opción de tres caminos (3.1)", destino: "3.1" },
                     { texto: "Regresar al inicio", destino: "1" }
                 ]
             },
             "2.2": {
-                archivo: "2.2.jpg",
+                archivo: "2.2.pdf",
                 opciones: [
                     { texto: "Ir al final directo", destino: "3.2" }
                 ]
             },
             "3.1": {
-                archivo: "3.1.jpg",
+                archivo: "3.1.pdf",
                 opciones: [
                     { texto: "Volver a intentar (Izquierda)", destino: "1" },
                     { texto: "Ruta alternativa (Abajo)", destino: "2.2" },
@@ -204,7 +204,7 @@
                 ]
             },
             "3.2": {
-                archivo: "3.2.jpg",
+                archivo: "3.2.pdf",
                 opciones: [] // Al estar vacío, el sistema sabe que es un nodo final.
             }
         };
