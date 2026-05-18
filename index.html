@@ -1,7 +1,3 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,9 +5,143 @@
     <title>Cómic Interactivo</title>
     
     <style>
-        /* [AQUÍ SE QUEDA TODO EL CSS QUE YA TENÍAS] */
-        /* Lo que controla el diseño negro, el tamaño de la imagen, */
-        /* los botones y el efecto clip-path de rasgado de papel */
+        /* El CSS base se mantiene igual */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #121212;
+            font-family: 'Courier New', Courier, monospace;
+            overflow-x: hidden;
+            color: #fff;
+        }
+
+        #visor-container {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .comic-img {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            display: block;
+        }
+
+        .pantalla-efecto {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 800px;
+            height: 100vh;
+            background-size: cover;
+            background-position: top center;
+            z-index: 10;
+            pointer-events: none;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
+        }
+
+        .arranque-arriba {
+            clip-path: polygon(0% 0%, 100% 0%, 100% 48%, 85% 52%, 70% 47%, 55% 53%, 40% 48%, 25% 52%, 10% 46%, 0% 50%);
+        }
+
+        .arranque-abajo {
+            clip-path: polygon(0% 50%, 10% 46%, 25% 52%, 40% 48%, 55% 53%, 70% 47%, 85% 52%, 100% 48%, 100% 100%, 0% 100%);
+        }
+
+        .animar-arriba {
+            transform: translate(-50%, -60vh) rotate(-2deg);
+            opacity: 0;
+        }
+
+        .animar-abajo {
+            transform: translate(-50%, 60vh) rotate(2deg);
+            opacity: 0;
+        }
+
+        #popup-decisiones {
+            position: fixed;
+            bottom: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(20, 20, 20, 0.95);
+            border: 3px solid #fff;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+            z-index: 5;
+            transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        #popup-decisiones.activo {
+            bottom: 40px;
+        }
+
+        .titulo-popup {
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ccc;
+        }
+
+        .opcion-btn {
+            background: #222;
+            color: #fff;
+            border: 2px solid #555;
+            padding: 12px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 5px;
+            transition: all 0.2s ease;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        .opcion-btn:hover {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+        }
+
+        .tecla-indicador {
+            background: #444;
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            border-bottom: 3px solid #222;
+            text-transform: uppercase;
+        }
+
+        .opcion-btn:hover .tecla-indicador {
+            background: #000;
+            color: #fff;
+            border-bottom-color: #333;
+        }
+
+        #final-pagina {
+            width: 100%;
+            height: 50px;
+        }
     </style>
 </head>
 <body>
@@ -27,14 +157,10 @@
     </div>
 
     <!-- ======================================================== -->
-    <!-- AQUÍ EMPIEZA EL NUEVO SCRIPT (Borras el viejo y pegas este) -->
+    <!-- AQUÍ SE CORRIGIÓ: Se añadió la etiqueta <script> correcta -->
     <!-- ======================================================== -->
-    // ========================================================
+    <script>
         // CONFIGURACIÓN DEL ÁRBOL DE DECISIONES
-        // ========================================================
-        // Mapea tus archivos de la carpeta 'assets' usando su nombre.
-        // Ejemplo: "1" buscará el archivo "assets/1.jpg"
-    
         const historia = {
             "1": {
                 archivo: "1.jpg", 
@@ -72,7 +198,7 @@
             "4.2": {
                 archivo: "4.2.jpg",
                 opciones: []
-            },
+            }
         };
 
         const mapeoFlechas = {
@@ -89,7 +215,7 @@
 
         let nodoActual = "1"; 
         let opcionesActivas = [];
-        let bloquearObserver = true; // El truco para que no se raye al inicio
+        let bloquearObserver = true; 
 
         const imgElement = document.getElementById("comic-actual");
         const popup = document.getElementById("popup-decisiones");
@@ -133,7 +259,6 @@
             }
         }
 
-        // Se activa SOLO cuando la imagen ya se estiró por completo en pantalla
         imgElement.onload = () => {
             setTimeout(() => {
                 bloquearObserver = false;
@@ -147,6 +272,7 @@
             const capaArriba = document.createElement("div");
             const capaAbajo = document.createElement("div");
 
+            capaArriba.className = "pantaya-efecto arranque-arriba"; // Mantenido la clase de tu CSS
             capaArriba.className = "pantalla-efecto arranque-arriba";
             capaAbajo.className = "pantalla-efecto arranque-abajo";
 
@@ -171,7 +297,7 @@
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (bloquearObserver) return; // Si está cargando, ignora el scroll
+                if (bloquearObserver) return; 
 
                 if (entry.isIntersecting) {
                     popup.classList.add("activo");
